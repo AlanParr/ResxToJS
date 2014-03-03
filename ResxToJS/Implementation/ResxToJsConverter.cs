@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Collections;
+using System.IO;
+using System.Linq;
+using System.Resources;
 
 namespace ResxToJs
 {
-	using System.Collections;
-	using System.IO;
-	using System.Linq;
-	using System.Resources;
-	using System.Text;
-
 	public class ResxToJsConverter : IResxToJsConverter
 	{
 		private readonly IDeepCopier objectCopier;
@@ -59,19 +57,8 @@ namespace ResxToJs
 
 		public void WriteOutput(Options options, Dictionary<string, string> dict, string outputLocation)
 		{
-			var sb = new StringBuilder("Resources = {");
-			foreach (var entry in dict)
-			{
-				sb.AppendFormat("\"{0}\":\"{1}\",", entry.Key, entry.Value);
-			}
-
-			if (sb.Length > 0)
-			{
-				sb = sb.Remove(sb.Length - 1, 1);
-			}
-			sb.Append("};");
-			var prettyJson = options.PrettyPrint ? this.jsonHelper.PrettyPrintJson(sb.ToString()) : sb.ToString();
-			System.IO.File.WriteAllText(outputLocation, prettyJson);
+		    var json = jsonHelper.GenerateJson(dict, "Resources", options.PrettyPrint);
+			File.WriteAllText(outputLocation, json);
 		}
 	}
 }

@@ -12,7 +12,7 @@ namespace ResxToJs
 			{
 				IDeepCopier copier = new DeepCopier();
 				IResxReader resxReader = new ResxReader();
-				IJsonHelper jsonHelper = new JsonHelper();
+				IJsonHelper jsonHelper = new NewtonsoftJsonHelper();
 				IResxToJsConverter converter = new ResxToJsConverter(copier, resxReader, jsonHelper);
 				converter.Convert(options);
 			}

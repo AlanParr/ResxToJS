@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace ResxToJs
 {
@@ -6,7 +7,26 @@ namespace ResxToJs
 	{
 		private const string IndentString = "    ";
 
-		public string PrettyPrintJson(string jsonString)
+		public string GenerateJson(Dictionary<string, string> input, string objectName = "Resources", bool prettyPrint = false)
+		{
+			var sb = new StringBuilder(objectName + " = {");
+			foreach (var entry in input)
+			{
+				sb.AppendFormat("\"{0}\":\"{1}\",", entry.Key, entry.Value);
+			}
+
+			if (sb.Length > 0)
+			{
+				sb = sb.Remove(sb.Length - 1, 1);
+			}
+			sb.Append("};");
+
+            var result = prettyPrint ? PrettyPrintJson(sb.ToString()) : sb.ToString();
+
+		    return result;
+		}
+
+		private string PrettyPrintJson(string jsonString)
 		{
 			var quoted = false;
 			var sb = new StringBuilder();
