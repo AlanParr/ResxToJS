@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
+using System;
+using System.Collections;
+using System.IO;
+using System.Resources;
 
 namespace ResxToJs
 {
-	using System;
-	using System.Collections;
-	using System.IO;
-	using System.Resources;
-
 	public class ResxReader : IResxReader
 	{
 		public List<ResourceFile> GetResourceFiles(string directory)
@@ -15,12 +14,12 @@ namespace ResxToJs
 			var resourceFiles = Directory.GetFiles(directory, "*.resx");
 			foreach (var filePathName in resourceFiles)
 			{
-				var resourceFile = new ResourceFile() { IsBaseResourceType = false, ResourceFilePathName = filePathName };
+				var resourceFile = new ResourceFile { IsBaseResourceType = false, ResourceFilePathName = filePathName };
 
-				var nameWithoutResx = filePathName.Remove(filePathName.LastIndexOf("."), 5);
+				var nameWithoutResx = Path.GetFileNameWithoutExtension(filePathName);
 
 				// The file which does not have the ISO culture code in it is the base resource file.
-				if (nameWithoutResx.IndexOf(".") == -1)
+				if (nameWithoutResx != null && nameWithoutResx.IndexOf(".", StringComparison.Ordinal) == -1)
 				{
 					resourceFile.IsBaseResourceType = true;
 				}
@@ -48,7 +47,6 @@ namespace ResxToJs
 				
 			}
 			
-
 			return resourceFileDict;
 		}
 	}
